@@ -8,9 +8,10 @@ metadata:
 spec:
   containers:
     - name: ey-cart-containers
-      image: muralisocail123/ey-cart:v1.1.0
+      image: muralisocial123/ey-cart:v1.1.0
       ports:
         - containerPort: 3000
+
 
 
 
