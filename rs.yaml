@@ -5,7 +5,6 @@ metadata:
   namespace: vignesh-ns
   labels:
     app: cart
-
 spec: #it behaviour of the replica set 
   replicas: 3
   selector: 
@@ -16,7 +15,11 @@ spec: #it behaviour of the replica set
       labels:
         app: web
     spec: #it contains container definition
-      - name: ey-cart-containers
-        image: muralisocial123/ey-cart:v1.1.0
+      containers:
+        - name: ey-cart-containers
+          image: muralisocial123/ey-cart:v1.1.0
+          ports:
+            - containerPort: 3000
+
 
 
