@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: two-pod
+  namespace: vignesh-ns
+  labels:
+    app: two-web
+spec:
+  containers:
+    - name: two-web-container
+      image: vignesh8386/web:latest
+      ports:
+        - containerPort: 3000
