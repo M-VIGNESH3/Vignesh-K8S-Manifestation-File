@@ -10,4 +10,5 @@ spec:
     - name: one-web-container
       image: vignesh8386/my-app:v1.1.0
       ports:
-        - containerPort: 3000
+
+        - containerPort: 80
