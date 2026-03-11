@@ -5,10 +5,10 @@ metadata:
   Namespace: vignesh-ns
   labels:
     app: ey-cart
-
 spec:
   containers:
     - name: ey-cart-containers
       image: muralisocail123/ey-cart:v1.1.0
       ports:
+
         - containerport: 3000
