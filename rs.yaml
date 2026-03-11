@@ -9,7 +9,7 @@ metadata:
 spec: #it behaviour of the replica set 
   replicas: 3
   selector: 
-    matchlabel:
+    matchLabels:
       app: web
   template: # it contains pod definition
     metadata:
@@ -18,4 +18,5 @@ spec: #it behaviour of the replica set
     spec: #it contains container definition
       - name: ey-cart-containers
         image: muralisocial123/ey-cart:v1.1.0
+
 
