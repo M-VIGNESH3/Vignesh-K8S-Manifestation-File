@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: ey-Pod
-  Namespace: vignesh-ns
+  namespace: vignesh-ns
   labels:
     app: ey-cart
 spec:
@@ -11,4 +11,5 @@ spec:
       image: muralisocail123/ey-cart:v1.1.0
       ports:
         - containerPort: 3000
+
 
