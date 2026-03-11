@@ -1,5 +1,6 @@
-apiversion: v1
-kind: Namespace
+apiversion:  v1
+kind:  Namespace
 metadata:
-  name: vignesh-ns
+  name:  vignesh-ns
+
 
