@@ -6,7 +6,7 @@ metadata:
   labels:
     app: cart
 spec: #it behaviour of the replica set 
-  replicas: 4
+  replicas: 3
   selector: 
     matchLabels:
       app: web
@@ -20,6 +20,7 @@ spec: #it behaviour of the replica set
           image: muralisocial123/flipkart-app-web:v1.1.0
           ports:
             - containerPort: 3000
+
 
 
 
