@@ -1,0 +1,375 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: healthcare
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+  namespace: healthcare
+type: Opaque
+data:
+  mysql-root-password: cm9vdHBhc3M=
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+  namespace: healthcare
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: healthcare
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-root-password
+        volumeMounts:
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: healthcare
+spec:
+  selector:
+    app: mysql
+  ports:
+  - port: 3306
+    targetPort: 3306
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: healthcare-config
+  namespace: healthcare
+data:
+  DB_HOST: mysql
+  DB_PORT: "3306"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-management-service
+  namespace: healthcare
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user-management-service
+  template:
+    metadata:
+      labels:
+        app: user-management-service
+    spec:
+      containers:
+      - name: user-management-service
+        image: vignesh8386/healthcareapp-user-management-service:latest
+        ports:
+        - containerPort: 3002
+        envFrom:
+        - configMapRef:
+            name: healthcare-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-management-service
+  namespace: healthcare
+spec:
+  selector:
+    app: user-management-service
+  ports:
+  - port: 3002
+    targetPort: 3002
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-service
+  namespace: healthcare
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: admin-service
+  template:
+    metadata:
+      labels:
+        app: admin-service
+    spec:
+      containers:
+      - name: admin-service
+        image: vignesh8386/healthcareapp-admin-service:latest
+        ports:
+        - containerPort: 3009
+        envFrom:
+        - configMapRef:
+            name: healthcare-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-service
+  namespace: healthcare
+spec:
+  selector:
+    app: admin-service
+  ports:
+  - port: 3009
+    targetPort: 3009
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointment-service
+  namespace: healthcare
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: appointment-service
+  template:
+    metadata:
+      labels:
+        app: appointment-service
+    spec:
+      containers:
+      - name: appointment-service
+        image: vignesh8386/healthcareapp-appointment-service:latest
+        ports:
+        - containerPort: 3001
+        envFrom:
+        - configMapRef:
+            name: healthcare-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appointment-service
+  namespace: healthcare
+spec:
+  selector:
+    app: appointment-service
+  ports:
+  - port: 3001
+    targetPort: 3001
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registration-service
+  namespace: healthcare
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: registration-service
+  template:
+    metadata:
+      labels:
+        app: registration-service
+    spec:
+      containers:
+      - name: registration-service
+        image: vignesh8386/healthcareapp-registration-service:latest
+        ports:
+        - containerPort: 3004
+        envFrom:
+        - configMapRef:
+            name: healthcare-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registration-service
+  namespace: healthcare
+spec:
+  selector:
+    app: registration-service
+  ports:
+  - port: 3004
+    targetPort: 3004
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vital-sign-service
+  namespace: healthcare
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vital-sign-service
+  template:
+    metadata:
+      labels:
+        app: vital-sign-service
+    spec:
+      containers:
+      - name: vital-sign-service
+        image: vignesh8386/healthcareapp-vital-sign-service:latest
+        ports:
+        - containerPort: 3003
+        envFrom:
+        - configMapRef:
+            name: healthcare-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vital-sign-service
+  namespace: healthcare
+spec:
+  selector:
+    app: vital-sign-service
+  ports:
+  - port: 3003
+    targetPort: 3003
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: forum-service
+  namespace: healthcare
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: forum-service
+  template:
+    metadata:
+      labels:
+        app: forum-service
+    spec:
+      containers:
+      - name: forum-service
+        image: vignesh8386/healthcareapp-forum-service:latest
+        ports:
+        - containerPort: 3007
+        envFrom:
+        - configMapRef:
+            name: healthcare-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: forum-service
+  namespace: healthcare
+spec:
+  selector:
+    app: forum-service
+  ports:
+  - port: 3007
+    targetPort: 3007
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: complaint-service
+  namespace: healthcare
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: complaint-service
+  template:
+    metadata:
+      labels:
+        app: complaint-service
+    spec:
+      containers:
+      - name: complaint-service
+        image: vignesh8386/healthcareapp-complaint-service:latest
+        ports:
+        - containerPort: 3008
+        envFrom:
+        - configMapRef:
+            name: healthcare-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: complaint-service
+  namespace: healthcare
+spec:
+  selector:
+    app: complaint-service
+  ports:
+  - port: 3008
+    targetPort: 3008
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: healthcare
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: vignesh8386/healthcareapp-frontend:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: healthcare
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30010
+  type: NodePort
