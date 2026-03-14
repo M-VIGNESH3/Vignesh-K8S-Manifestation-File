@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-nginx-conf
+  namespace: healthcare
+data:
+  default.conf: |
+    resolver kube-dns.kube-system.svc.cluster.local valid=10s ipv6=off;
+
+    server {
+      listen 80;
+
+      # Doctor routes go to user-management-service
+      set $doctor_backend http://user-management-service:3002;
+
+      location /api/doctor/ {
+        proxy_pass $doctor_backend;
+      }
+
+      # Add other backends as needed
+      set $appointment_backend http://appointment-service:3001;
+      location /api/appointment/ { proxy_pass $appointment_backend; }
+
+      set $registration_backend http://registration-service:3004;
+      location /api/registration/ { proxy_pass $registration_backend; }
+
+      set $vitals_backend http://vital-sign-service:3003;
+      location /api/vitals/ { proxy_pass $vitals_backend; }
+
+      set $admin_backend http://admin-service:3009;
+      location /api/admin/ { proxy_pass $admin_backend; }
+
+      set $complaint_backend http://complaint-service:3008;
+      location /api/complaint/ { proxy_pass $complaint_backend; }
+
+      set $forum_backend http://forum-service:3007;
+      location /api/forum/ { proxy_pass $forum_backend; }
+    }
