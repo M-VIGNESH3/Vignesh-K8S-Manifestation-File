@@ -13,16 +13,17 @@ data:
   mysql-root-password: cm9vdHBhc3M=
 ---
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: PersistentVolume
 metadata:
-  name: mysql-pvc
-  namespace: healthcare
+  name: mysql-pv
 spec:
+  capacity:
+    storage: 2Gi
   accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/mysql-data
+
 ---
 apiVersion: apps/v1
 kind: Deployment
