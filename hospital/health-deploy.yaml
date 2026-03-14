@@ -35,7 +35,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: 5Gi
   volumeName: mysql-pv   # <— directly bind to your hostPath PV
 
 ---
