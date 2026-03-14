@@ -388,3 +388,24 @@ spec:
     targetPort: 80
     nodePort: 30010
   type: NodePort
+
+  ---
+  apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: healthcare
+spec:
+  template:
+    spec:
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: frontend-nginx-conf
+
+      containers:
+      - name: frontend
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
