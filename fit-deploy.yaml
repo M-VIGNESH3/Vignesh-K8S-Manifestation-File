@@ -24,7 +24,14 @@ spec:
     spec:
       containers:
         - name: fit-cont
-          image: muralisocial123/transaction-app:v1.0.0 
+          image: muralisocial123/fitness-app:v1.0.1
+          resources: 
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
           ports:
             - containerPort: 3000
 
@@ -37,13 +44,9 @@ metadata:
 spec:
   selector:
     app: fit
-  ports:
+  ports:s:
     - port: 3001 #it is a services port number we are using to expose application to internet
       targetPort: 3000
       protocol: TCP 
-  type: NodePort
-
+  type: ClusterIP
       
-
-
-
